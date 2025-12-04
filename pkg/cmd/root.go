@@ -16,6 +16,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var ShellBanner = `
+  ▄████  ███▄    █  ▄▄▄        ██████ 
+ ██▒ ▀█▒ ██ ▀█   █ ▒████▄    ▒██    ▒ 
+▒██░▄▄▄░▓██  ▀█ ██▒▒██  ▀█▄  ░ ▓██▄   
+░▓█  ██▓▓██▒  ▐▌██▒░██▄▄▄▄██   ▒   ██▒
+░▒▓███▀▒▒██░   ▓██░ ▓█   ▓██▒▒██████▒▒
+ ░▒   ▒ ░ ▒░   ▒ ▒  ▒▒   ▓▒█░▒ ▒▓▒ ▒ ░
+  ░   ░ ░ ░░   ░ ▒░  ▒   ▒▒ ░░ ░▒  ░ ░
+░ ░   ░    ░   ░ ░   ░   ▒   ░  ░  ░  
+      ░          ░       ░  ░      ░  
+
+GNAS is Not A Shell
+
+`
+var ShellName = "GNAS"
+
 var ServerListener = ":8000"
 var UploadServer = "http://127.0.0.1"
 var UploadToken = "you should change this at build time"
@@ -34,23 +50,13 @@ var RootCmd = &cobra.Command{
 		app.NewlineBefore = true
 		app.NewlineAfter = true
 
-		app.SetPrintLogo(func(_ *console.Console) {
-			fmt.Print(`
-  ▄████  ███▄    █  ▄▄▄        ██████ 
- ██▒ ▀█▒ ██ ▀█   █ ▒████▄    ▒██    ▒ 
-▒██░▄▄▄░▓██  ▀█ ██▒▒██  ▀█▄  ░ ▓██▄   
-░▓█  ██▓▓██▒  ▐▌██▒░██▄▄▄▄██   ▒   ██▒
-░▒▓███▀▒▒██░   ▓██░ ▓█   ▓██▒▒██████▒▒
- ░▒   ▒ ░ ▒░   ▒ ▒  ▒▒   ▓▒█░▒ ▒▓▒ ▒ ░
-  ░   ░ ░ ░░   ░ ▒░  ▒   ▒▒ ░░ ░▒  ░ ░
-░ ░   ░    ░   ░ ░   ░   ▒   ░  ░  ░  
-      ░          ░       ░  ░      ░  
+		if len(ShellName) > 0 {
 
-GNAS is Not A Shell
+			app.SetPrintLogo(func(_ *console.Console) {
+				fmt.Print(ShellBanner)
+			})
 
-`)
-		})
-
+		}
 		menu := app.ActiveMenu()
 
 		// Set some custom prompt handlers for this menu.
@@ -134,7 +140,7 @@ func setupPrompt(m *console.Menu) {
 			dir = filepath.Base(wd)
 		}
 
-		return fmt.Sprintf(prompt, "GNAS", getTime(), getIntegrity(), dir)
+		return fmt.Sprintf(prompt, ShellName, getTime(), getIntegrity(), dir)
 	}
 
 	p.Transient = func() string { return "\x1b[1;30m" + ">> " + "\x1b[0m" }
