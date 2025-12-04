@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func HTTPServer(serverAddr, srvDir string, allowPut bool, uploadToken string) {
+func HTTPServer(serverAddr, srvDir string, allowPut bool, uploadToken string) error {
 	fs := http.FileServer(http.Dir(srvDir))
 
 	if allowPut {
@@ -22,10 +22,7 @@ func HTTPServer(serverAddr, srvDir string, allowPut bool, uploadToken string) {
 	http.Handle("/", addHeaders(fs))
 
 	log.Printf("Serving %s on %s\n", srvDir, serverAddr)
-	err := http.ListenAndServe(serverAddr, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+	return http.ListenAndServe(serverAddr, nil)
 
 }
 

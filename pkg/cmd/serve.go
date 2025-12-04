@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"log"
+
 	"github.com/defektive/gnas/pkg/files"
 	"github.com/spf13/cobra"
 )
@@ -20,7 +22,9 @@ to quickly create a Cobra application.`,
 		dir, _ := cmd.Flags().GetString("dir")
 		allowPut, _ := cmd.Flags().GetBool("put")
 
-		files.HTTPServer(ServerListener, dir, allowPut, UploadToken)
+		if err := files.HTTPServer(ServerListener, dir, allowPut, UploadToken); err != nil {
+			log.Println(err.Error())
+		}
 	},
 }
 

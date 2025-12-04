@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -101,14 +100,14 @@ func UploadFile(remoteServer, authToken, filePath string) error {
 	// Open the file
 	file, err := os.Open(filePath)
 	if err != nil {
-		log.Fatalf("Error opening file: %v", err)
+		return err
 	}
 	defer file.Close()
 
 	// Create a new PUT request
 	req, err := http.NewRequest(http.MethodPut, remoteServer, file)
 	if err != nil {
-		log.Fatalf("Error creating request: %v", err)
+		return err
 	}
 
 	// Set the Content-Type header (optional, but good practice)
@@ -120,7 +119,7 @@ func UploadFile(remoteServer, authToken, filePath string) error {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatalf("Error sending request: %v", err)
+		return err
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusCreated {
