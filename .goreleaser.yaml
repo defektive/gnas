@@ -1,4 +1,3 @@
-#file: noinspection SpellCheckingInspection,GrazieInspection
 # This is an example .goreleaser.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
 
@@ -23,17 +22,17 @@ builds:
       - -trimpath
     goos:
       - linux
-      - windows # not sure need to test
+      - windows
       - darwin
     goarch:
       - amd64
       - arm64
-#    ldflags:
-#      - -s -w
+    ldflags:
+      - -s -w
 #      - ./usemsan=-msan
 
 archives:
-  - formats: tar.gz
+  - formats: [tar.gz]
     # this name template makes the OS and Arch compatible with the results of `uname`.
     name_template: >-
       {{ .ProjectName }}_
@@ -45,7 +44,7 @@ archives:
     # use zip for windows archives
     format_overrides:
       - goos: windows
-        formats: zip
+        formats: [zip]
 
 changelog:
   sort: asc
@@ -53,3 +52,10 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+
+release:
+  footer: >-
+
+    ---
+
+    Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
