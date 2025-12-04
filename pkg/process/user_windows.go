@@ -1,0 +1,9 @@
+package process
+
+import (
+	"golang.org/x/sys/windows"
+)
+
+func IsAdmin() bool {
+	return windows.GetCurrentProcessToken().IsElevated()
+}

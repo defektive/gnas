@@ -2,7 +2,13 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"net/url"
+	"os"
+	"path/filepath"
+	"strings"
 
+	"github.com/defektive/gnas/pkg/files"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +23,31 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("fetch called")
+
+		for _, fileToGet := range args {
+
+			parse, err := url.Parse(fileToGet)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
+			saveFile := filepath.Base(parse.Path)
+
+			if files.Exists(saveFile) {
+				fmt.Printf("File exists. Would you like to delete it? ")
+				var input string
+				fmt.Scanln(&input)
+				if strings.ToLower(input)[0] == 'y' {
+					os.Remove(saveFile)
+				}
+
+			}
+			err = files.DownloadURL(parse, saveFile)
+			if err != nil {
+				log.Println(err)
+			}
+		}
 	},
 }
 

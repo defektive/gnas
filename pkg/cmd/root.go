@@ -10,14 +10,17 @@ import (
 	"strings"
 	"time"
 
+	"github.com/defektive/gnas/pkg/process"
 	"github.com/reeflective/console"
 	"github.com/reeflective/readline"
 	"github.com/spf13/cobra"
 )
 
-const (
-	shortUsage = "Console application example, with cobra commands/flags/completions generated from structs"
-)
+var ServerListener = ":8000"
+var UploadServer = "http://127.0.0.1"
+var UploadToken = "you should change this at build time"
+
+var UploadEndpoint = UploadServer + ServerListener
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -73,7 +76,6 @@ GNAS is Not A Shell
 		// Everything is ready for a tour.
 		// Run the console and take a look around.
 		app.Start()
-
 	},
 }
 
@@ -139,11 +141,14 @@ func setupPrompt(m *console.Menu) {
 }
 
 func getTime() string {
-	return time.Now().Format("03:04:05.000")
+	return time.Now().Format(time.RFC3339)
 }
 
 func getIntegrity() string {
-	return "low"
+	if process.IsAdmin() {
+		return "HIGH"
+	}
+	return "LOW"
 }
 
 // exitCtrlD is a custom interrupt handler to use when the shell
